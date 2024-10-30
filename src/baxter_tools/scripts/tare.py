@@ -71,7 +71,7 @@ def gripper_removed(side):
     if gripper.type() != 'custom':
         rospy.logerr("Cannot tare with grippers attached."
                        " Remove grippers before tare!")
-        return False
+        return True
     return True
 
 

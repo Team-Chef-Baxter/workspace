@@ -1,7 +1,7 @@
 <launch>
 
   <!-- Limb Argument -->
-  <arg name="limb" default="right" />
+  <arg name="limb" default="left" />
 
   <!-- Start the Joint Trajectory Action Server -->
   <node name="rsdk_joint_trajectory_action_server" pkg="baxter_interface"

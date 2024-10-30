@@ -19,12 +19,15 @@ unset your_hostname
 # will be overwritten by any variables set here.
 
 # Specify Baxter's hostname
-baxter_hostname="011311P0006"
+baxter_hostname="192.168.1.4"
+ROS_IP="192.168.1.4"
+ROS_HOSTNAME="bhl2-HP-Pavilion-Gaming-Desktop-TG01-1xxx.local"
+# ROS_MASTER_URI="http://${baxter_hostname}:192.168.1.4"
 
 # Set *Either* your computers ip address or hostname. Please note if using
 # your_hostname that this must be resolvable to Baxter.
-your_ip="169.254.148.233"
-#your_hostname="my_computer.local"
+your_ip="192.168.1.3"
+# your_hostname="bhl2-HP-Pavilion-Gaming-Desktop-TG01-1xxx.local"
 
 # Specify ROS distribution (e.g. indigo, hydro, etc.)
 ros_version="noetic"

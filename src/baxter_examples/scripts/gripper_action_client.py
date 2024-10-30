@@ -122,8 +122,8 @@ def main():
     gc.command(position=0.0, effort=30.0)
     gc.wait()
     gc.command(position=100.0, effort=40.0)
-    print gc.wait()
-    print "Exiting - Gripper Action Test Example Complete"
+    print(gc.wait())
+    print("Exiting - Gripper Action Test Example Complete")
 
 if __name__ == "__main__":
     main()
