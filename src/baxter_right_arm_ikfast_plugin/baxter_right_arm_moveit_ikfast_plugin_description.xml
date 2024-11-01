@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<library path="lib/libbaxter_right_arm_moveit_ikfast_plugin">
+  <class name="baxter_right_arm/IKFastKinematicsPlugin" type="baxter_right_arm::IKFastKinematicsPlugin" base_class_type="kinematics::KinematicsBase">
+    <description>IKFast61 plugin for closed-form kinematics of baxter right_arm</description>
+  </class>
+</library>
