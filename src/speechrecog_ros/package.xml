@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>speechrecog_ros</name>
+  <version>0.0.1</version>
+  <description>The speechrecog_ros package for speech recognition and ROS integration.</description>
+
+  <maintainer email="jk67@rice.edu">Joon</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+ 
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
+
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>message_runtime</exec_depend>
+
+  <exec_depend>pyaudio</exec_depend>
+  <exec_depend>speech_recognition</exec_depend>
+  <exec_depend>openai</exec_depend>
+  <exec_depend>gtts</exec_depend>
+  <exec_depend>playsound</exec_depend>
+
+  <export>
+  </export>
+</package>
