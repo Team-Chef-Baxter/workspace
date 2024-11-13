@@ -44,9 +44,9 @@ def recognize_speech(recognizer, microphone):
 
 
 def send_to_openai(messages):
-    OPENAI_API_KEY =
+    OPENAI_API_KEY ='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'
     if not OPENAI_API_KEY:
-        rospy.logerr("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
+        rospy.logerr("OpenAI API key not found.")
         sys.exit(1)
     openai.api_key = OPENAI_API_KEY
 
