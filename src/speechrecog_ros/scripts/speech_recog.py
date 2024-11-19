@@ -44,7 +44,7 @@ def recognize_speech(recognizer, microphone):
 
 
 def send_to_openai(messages):
-    OPENAI_API_KEY =
+    OPENAI_API_KEY = "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"
     if not OPENAI_API_KEY:
         rospy.logerr("OpenAI API key not found.")
         sys.exit(1)
@@ -52,7 +52,7 @@ def send_to_openai(messages):
 
     try:
         response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=messages,
             temperature=0.7
         )
@@ -104,6 +104,19 @@ def speak_text(full_text):
     except Exception as e:
         rospy.logerr(f"Error in tts: {e}")
 
+def get_microphone_index(target_name):
+    p = pyaudio.PyAudio()
+    try:
+        for i in range(p.get_device_count()):
+            info = p.get_device_info_by_index(i)
+            if info['maxInputChannels'] > 0 and target_name.lower() in info['name'].lower():
+                rospy.loginfo(f"Found target microphone '{target_name}' at index {i}: {info['name']}")
+                return i
+        rospy.logerr(f"Target microphone '{target_name}' not found. Please check the connection.")
+        return None
+    finally:
+        p.terminate()
+
 def main():
     rospy.init_node('voice_assistant_node')
     speech_pub = rospy.Publisher('recognized_speech', String, queue_size=10)
@@ -111,8 +124,14 @@ def main():
     recipe_pub = rospy.Publisher('salad_recipe', SaladRecipe, queue_size=10)
 
     recognizer = sr.Recognizer()
-    DEVICE_INDEX = 9  
+    TARGET_MICROPHONE_NAME = "Logi Webcam C920e: USB Audio (hw:1,0)"  
+    DEVICE_INDEX = get_microphone_index(TARGET_MICROPHONE_NAME)
+    if DEVICE_INDEX is None:
+        rospy.logerr("Exiting: Target microphone not found.")
+        sys.exit(1) 
     microphone = sr.Microphone(device_index=DEVICE_INDEX)
+
+    waiting_for_recipe_confirmation = False
 
     #engine = pyttsx3.init()
     #engine.setProperty('rate', 150)
@@ -125,26 +144,25 @@ def main():
 
     messages=[
                 {"role": "system", "content": (
-                    "You are a helpful assistant who can engage in casual conversation and provides salad recipes and instructions."
-                    "Only when the user explicitly asks for your help to make a salad(e.g., 'Help me make a Greek salad', 'Can you make a salad for me') provide a step by step recipe and instruction include the recipe in the following JSON format below, enclosed between '<BEGIN_JSON>' and '<END_JSON>' tags. If the user just asks how to make a certain salad, give them a natural language recipe."
-                    "When the user wants to make a salad but hasn't specified ingredients, ask them if they have the necessary ingredients. If they say anything along the lines of 'yes', provide the recipe and instructions in natural language."
-                    "If the user says they have certain ingredients (e.g., 'I have lettuce, tomatoes and cucumbers'), suggest a salad that can be made with those ingredients and ask 'You could make a [] salad with those ingredients. Do you want a recipe and instructions? If the user says anything along the lines of 'Yes', provide the recipe and instructions in natural language."
-                    "All recipes and instructions should be in the JSON format:\n\n"
+
+                    "You are Chef Baxter, a helpful cooking assistant that answers questions. The user wants to make salads. Respond naturally providing salad recipes(not in the JSON format below) and having a helpful conversation with the user. If the user asks for a recipe or advice or instructions, respond in natural language and do not output the JSON format array"
+                    "Only ouput the JSON format array if the user orders or asks you to or tells you to make a salad(e.g, 'Make me a fruit salad', 'Baxter make a fruit salad', 'Show me how to make a fruit salad'). Say 'Sure' and output step by step processes as the JSON format below so it can be published, not communicated with the user."
+
                     "<BEGIN_JSON>\n"
-                    "{\n"
-                    "  \"commands\": [\n"
-                    "    {\n"
-                    "      \"motion\": \"string\",\n"
-                    "      \"object\": \"string\",\n"
-                    "      \"optional_target\": \"string\"\n"
-                    "    },\n"
-                    "    ...\n"
-                    "  ]\n"
-                    "}\n"
-                    "<END_JSON>\n\n"
-                    "Remember that users may ask you to make the salad for them within a conversation, and if they do so, provide a step by step recipe and instruction include the recipe in the JSON format, enclosed between '<BEGIN_JSON>' and '<END_JSON>' tags."
-                    "Do not include 'gather ingredients' as a command in the JSON. Also, all motions should only be in the form of 'pick up', 'place into', 'stir', 'mix'. Exclude all other motions that involve a knife or water(e.g. 'dice', 'chop', 'wash'), and assume ingredients needing chopping or slicing are already prepared as so."
-                    "Only use the JSON format when providing recipes or instructions. For all other queries or casual conversation, respond in natural language. And, after providing the JSON format, the next message on your end should be 'Do you need any other help' and if the user says 'no', you can terminate the conversation."
+                    "  {\n"
+                    "    \"commands\": [\n"
+                    "      {\n"
+                    "        \"motion\": \"pick up\",\n"
+                    "        \"object\": \"tomato\",\n"
+                    "        \"optional_target\": \"\"\n"
+                    "      }\n"
+                    "    ]\n"
+                    "  }\n"
+                    "  <END_JSON>\n"
+                    "- Instructions must only include the following motions:\n"
+                    "  - `pick up`, `place into`, `stir`, and `mix`.\n"
+
+                    "If the user tells you to do something with the restricted motions, also print out the JSON format."
                 )},
                 #{"role": "user", "content": prompt}
     ]
@@ -168,6 +186,7 @@ def main():
             speech_pub.publish(voice_input)
             messages.append({"role": "user", "content":voice_input})
 
+            
         assistant_response = send_to_openai(messages)
         if assistant_response is None:
             continue
@@ -176,7 +195,7 @@ def main():
 
         response_pub.publish(assistant_response)
 
-        speak_text(assistant_response)
+        # speak_text(assistant_response)
 
         salad_recipe = parse_salad_recipe(assistant_response)
         if salad_recipe:
