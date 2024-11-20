@@ -19,13 +19,19 @@
 #     {id: ID, size: SIZE, name: NAME},
 #     ...
 #   ]
+
+
+
+# SIZE IS THE BLACK AREA ONLY!!!!!!
 standalone_tags:
   [
-    {id: 1, size: 0.15, name: name1},
-    {id: 9, size: 0.15, name: name9},
-    {id: 14, size: 0.15, name: name14},
-    {id: 376, size: 0.15, name: name376},
-    {id: 2, size: 0.15, name: name2}
+    {id: 1, size: 0.03, name: name1},
+    {id: 9, size: 0.03, name: name9},
+    {id: 14, size: 0.03, name: name14},
+    {id: 376, size: 0.03, name: name376},
+    {id: 2, size: 0.03, name: name2},
+
+    {id: 31, size: 0.21, name: nameXX}
   ]
 # ## Tag bundle definitions
 # ### Remarks
@@ -48,14 +54,14 @@ standalone_tags:
 #     },
 #     ...
 #   ]
-# tag_bundles:
-#   [
-#     {
-#       name: 'CUSTOM_BUNDLE_NAME',
-#       layout:
-#         [
-#           {id: 1, size: 0.15, name: name1},
-#           {id: 2, size: 0.15, name: name2}
-#         ]
-#     }
-#   ]
+tag_bundles:
+  [
+    {
+      name: 'CUSTOM_BUNDLE_NAME',
+      layout:
+        [
+          {id: 1, size: 0.03, name: name1},
+          {id: 2, size: 0.03, name: name2}
+        ]
+    }
+  ]

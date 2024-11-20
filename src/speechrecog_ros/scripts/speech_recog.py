@@ -44,7 +44,8 @@ def recognize_speech(recognizer, microphone):
 
 
 def send_to_openai(messages):
-    OPENAI_API_KEY = 
+    OPENAI_API_KEY = "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"
+    if not OPENAI_API_KEY:    
         rospy.logerr("OpenAI API key not found.")
         sys.exit(1)
     openai.api_key = OPENAI_API_KEY
@@ -145,7 +146,7 @@ def main():
                 {"role": "system", "content": (
 
                     "You are Chef Baxter, a helpful cooking assistant that answers questions. The user wants to make salads. Respond naturally providing salad recipes(not in the JSON format below) and having a helpful conversation with the user. If the user asks for a recipe or advice or instructions, respond in natural language and do not output the JSON format array"
-                    "Only ouput the JSON format array if the user orders or asks you to or tells you to make a salad(e.g, 'Make me a fruit salad', 'Baxter make a fruit salad', 'Show me how to make a fruit salad'). Say 'Sure' and output step by step processes as the JSON format below so it can be published, not communicated with the user."
+                    "Only ouput the JSON format array if the user orders or asks you to or tells you to make a salad(e.g, 'Make me a fruit salad', 'Baxter make a fruit salad', 'Show me how to make a fruit salad'). Say 'Sure I'll do so. Step back for safety.' and output step by step processes as the JSON format below so it can be published, not communicated with the user and then gracefully terminate the conversation"
 
                     "<BEGIN_JSON>\n"
                     "  {\n"
@@ -158,8 +159,8 @@ def main():
                     "    ]\n"
                     "  }\n"
                     "  <END_JSON>\n"
-                    "- Instructions must only include the following motions:\n"
-                    "  - `pick up`, `place into`, `stir`, and `mix`.\n"
+                    "- Instructions must only include the following motions in this exact order:\n"
+                    "  - `pick up`, `put in bowl`, `mix bowl`, and `hand bowl to user`.\n"
 
                     "If the user tells you to do something with the restricted motions, also print out the JSON format."
                 )},
@@ -194,7 +195,7 @@ def main():
 
         response_pub.publish(assistant_response)
 
-        # speak_text(assistant_response)
+        speak_text(assistant_response)
 
         salad_recipe = parse_salad_recipe(assistant_response)
         if salad_recipe:
