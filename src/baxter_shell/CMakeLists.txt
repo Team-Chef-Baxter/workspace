@@ -11,6 +11,12 @@ find_package(catkin REQUIRED COMPONENTS
   baxter_tools
 )
 
+## Generate services in the 'srv' folder
+add_service_files(
+  FILES
+  PickUp.srv
+)
+
 catkin_package(
   CATKIN_DEPENDS
   rospy
