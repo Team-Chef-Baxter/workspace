@@ -29,6 +29,7 @@ catkin_package(
 
 install(PROGRAMS
    scripts/shell_demo.py
+   scripts/mv_integration_demo.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
