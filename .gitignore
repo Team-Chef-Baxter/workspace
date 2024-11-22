@@ -2,3 +2,6 @@ build/
 devel/
 install/
 src/apriltag_ros/AndrewEnv/*
+build_isolated/
+devel_isolated/
+keys.txt

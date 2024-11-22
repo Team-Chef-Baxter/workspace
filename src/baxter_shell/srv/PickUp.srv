@@ -1,0 +1,6 @@
+# Request
+AprilTagDetectionArray detections
+---
+# Response
+bool success
+string message
