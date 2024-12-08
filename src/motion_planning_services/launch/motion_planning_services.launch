@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+motion_planning_services.launch: Starts and coordinates all the motion services.
+Note: Keep running this file in a separate tab forever.
+Requirements: No requirements needed
+Author: Bryce Liu
+Date: 12/08/2024
+-->
+<launch>
+    <!-- Run baxter_mover -->
+    <node name="baxter_mover" pkg="motion_planning_services" type="baxter_mover.py" output="screen" />
+
+    <!-- Run services -->
+    <node name="pickup_service" pkg="motion_planning_services" type="pickup_service.py" output="screen" />
+    <node name="put_in_bowl_service" pkg="motion_planning_services" type="put_in_bowl_service.py" output="screen" />
+    <node name="hand_to_user_service" pkg="motion_planning_services" type="hand_to_user_service.py" output="screen" />
+    <node name="stir_service" pkg="motion_planning_services" type="stir_service.py" output="screen" />
+
+    <!-- Run master planner -->
+    <node name="master_planner" pkg="motion_planning_services" type="master_planner.py" output="screen" />
+</launch>
