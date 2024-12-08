@@ -11,6 +11,7 @@ add_message_files(
   FILES
   SaladCommand.msg
   SaladRecipe.msg
+  DetectedObject.msg
 )
 
 generate_messages(
@@ -28,5 +29,6 @@ include_directories(
 
 catkin_install_python(PROGRAMS
   scripts/speech_recog.py
+  scripts/yolo_detect.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
